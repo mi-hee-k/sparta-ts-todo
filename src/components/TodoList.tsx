@@ -1,33 +1,22 @@
-import React from 'react';
-import { Todo } from '../types';
 import TodoItem from './TodoItem';
 import styled from 'styled-components';
+import { useAppSelector } from '../hooks';
+import { Todo } from '../types';
 
 interface TodoListProps {
-  todos: Todo[];
   isDone: boolean;
-  changeIsDone: (id: string) => void;
-  deleteTodo: (id: string) => void;
 }
 
-const TodoList = ({
-  todos,
-  changeIsDone,
-  deleteTodo,
-  isDone,
-}: TodoListProps) => {
+const TodoList = ({ isDone }: TodoListProps) => {
+  const todos = useAppSelector((state) => state.todos);
   return (
     <ScWrapper>
       <h2>{isDone ? '✨ 완료 ✨' : '💪 진행중 💪'}</h2>
       <ScListWrapper>
         {todos
-          .filter((item) => item.isDone === isDone)
-          .map((item) => (
-            <TodoItem
-              item={item}
-              changeIsDone={changeIsDone}
-              deleteTodo={deleteTodo}
-            />
+          .filter((item: Todo) => item.isDone === isDone)
+          .map((item: Todo) => (
+            <TodoItem item={item} />
           ))}
       </ScListWrapper>
     </ScWrapper>

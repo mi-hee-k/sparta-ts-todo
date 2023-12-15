@@ -1,13 +1,12 @@
-import React, { FormEvent, ChangeEvent, useState } from 'react';
-import { Todo } from '../types';
+import { FormEvent, ChangeEvent, useState } from 'react';
 import styled from 'styled-components';
 import { v4 as uuidv4 } from 'uuid';
+import { useAppDispatch } from '../hooks';
+import { addTodo } from '../redux/modules/TodoSlice';
 
-interface AddFormProps {
-  addTodo: (newTodo: Todo) => void;
-}
+const AddForm = () => {
+  const dispatch = useAppDispatch();
 
-const AddForm = ({ addTodo }: AddFormProps) => {
   const [inputs, setInputs] = useState({
     title: '',
     content: '',
@@ -36,7 +35,7 @@ const AddForm = ({ addTodo }: AddFormProps) => {
       content: inputs.content,
       isDone: false,
     };
-    addTodo(newTodo);
+    dispatch(addTodo(newTodo));
     setInputs({
       title: '',
       content: '',

@@ -1,19 +1,32 @@
 import React from 'react';
 import styled from 'styled-components';
+import { useAppDispatch } from '../hooks';
+import { editTodo, deleteTodo } from '../redux/modules/TodoSlice';
 
 interface TodoItemProps {
   item: { id: string; title: string; content: string };
-  changeIsDone: (id: string) => void;
-  deleteTodo: (id: string) => void;
 }
 
-const TodoItem = ({ item, changeIsDone, deleteTodo }: TodoItemProps) => {
+const TodoItem = ({ item }: TodoItemProps) => {
+  const dispatch = useAppDispatch();
+
+  const changeHandler = (id: string) => {
+    dispatch(editTodo(id));
+  };
+
+  const deleteHandler = (id: string) => {
+    if (window.confirm('정말 삭제하시겠습니까?')) {
+      dispatch(deleteTodo(id));
+    }
+    return;
+  };
+
   return (
     <ScList key={item.id}>
       <h3>{item.title}</h3>
       <p>{item.content}</p>
-      <ScCompleteBtn onClick={() => changeIsDone(item.id)}>완료</ScCompleteBtn>
-      <ScDeleteBtn onClick={() => deleteTodo(item.id)}>삭제</ScDeleteBtn>
+      <ScCompleteBtn onClick={() => changeHandler(item.id)}>완료</ScCompleteBtn>
+      <ScDeleteBtn onClick={() => deleteHandler(item.id)}>삭제</ScDeleteBtn>
     </ScList>
   );
 };
