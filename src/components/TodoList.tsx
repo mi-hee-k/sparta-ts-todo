@@ -6,8 +6,8 @@ import styled from 'styled-components';
 interface TodoListProps {
   todos: Todo[];
   isDone: boolean;
-  changeIsDone: (id: number) => void;
-  deleteTodo: (id: number) => void;
+  changeIsDone: (id: string) => void;
+  deleteTodo: (id: string) => void;
 }
 
 const TodoList = ({

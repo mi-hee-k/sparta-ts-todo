@@ -2,9 +2,9 @@ import React from 'react';
 import styled from 'styled-components';
 
 interface TodoItemProps {
-  item: { id: number; title: string; content: string };
-  changeIsDone: (id: number) => void;
-  deleteTodo: (id: number) => void;
+  item: { id: string; title: string; content: string };
+  changeIsDone: (id: string) => void;
+  deleteTodo: (id: string) => void;
 }
 
 const TodoItem = ({ item, changeIsDone, deleteTodo }: TodoItemProps) => {

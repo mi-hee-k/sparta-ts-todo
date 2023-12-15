@@ -3,23 +3,24 @@ import { Todo } from './types';
 import AddForm from './components/AddForm';
 import TodoList from './components/TodoList';
 import styled from 'styled-components';
+import { v4 as uuidv4 } from 'uuid';
 
 function App() {
   const [todos, setTodos] = useState<Todo[]>([
     {
-      id: 1,
+      id: uuidv4(),
       title: '할일1',
       content: '내용1',
       isDone: false,
     },
     {
-      id: 2,
+      id: uuidv4(),
       title: '할일2',
       content: '내용2',
       isDone: false,
     },
     {
-      id: 3,
+      id: uuidv4(),
       title: '할일3',
       content: '내용3',
       isDone: true,
@@ -32,7 +33,7 @@ function App() {
   };
 
   // 수정
-  const changeIsDone = (id: number) => {
+  const changeIsDone = (id: string) => {
     setTodos((prev) =>
       prev.map((item) => {
         if (item.id === id) {
@@ -44,7 +45,7 @@ function App() {
   };
 
   // 삭제
-  const deleteTodo = (id: number) => {
+  const deleteTodo = (id: string) => {
     if (window.confirm('정말 삭제하시겠습니까?')) {
       setTodos((prev) => prev.filter((item) => item.id !== id));
     }

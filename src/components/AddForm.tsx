@@ -1,6 +1,7 @@
 import React, { FormEvent, ChangeEvent, useState } from 'react';
 import { Todo } from '../types';
 import styled from 'styled-components';
+import { v4 as uuidv4 } from 'uuid';
 
 interface AddFormProps {
   addTodo: (newTodo: Todo) => void;
@@ -30,7 +31,7 @@ const AddForm = ({ addTodo }: AddFormProps) => {
     }
 
     const newTodo = {
-      id: 4,
+      id: uuidv4(),
       title: inputs.title,
       content: inputs.content,
       isDone: false,
