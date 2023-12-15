@@ -16,7 +16,7 @@ const TodoList = ({ isDone }: TodoListProps) => {
         {todos
           .filter((item: Todo) => item.isDone === isDone)
           .map((item: Todo) => (
-            <TodoItem item={item} />
+            <TodoItem key={item.id} item={item} />
           ))}
       </ScListWrapper>
     </ScWrapper>

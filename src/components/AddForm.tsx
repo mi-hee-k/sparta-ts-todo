@@ -3,6 +3,8 @@ import styled from 'styled-components';
 import { v4 as uuidv4 } from 'uuid';
 import { useAppDispatch } from '../hooks';
 import { addTodo } from '../redux/modules/TodoSlice';
+import api from '../axios/api';
+import { Todo } from '../types';
 
 const AddForm = () => {
   const dispatch = useAppDispatch();
@@ -17,6 +19,10 @@ const AddForm = () => {
       ...inputs,
       [e.target.name]: e.target.value,
     });
+  };
+
+  const addTodoToServer = async (newTodo: Todo) => {
+    await api.post('', newTodo);
   };
 
   const submitForm = (e: FormEvent<HTMLFormElement>) => {
@@ -35,6 +41,8 @@ const AddForm = () => {
       content: inputs.content,
       isDone: false,
     };
+
+    addTodoToServer(newTodo);
     dispatch(addTodo(newTodo));
     setInputs({
       title: '',

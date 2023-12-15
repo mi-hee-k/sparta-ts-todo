@@ -1,33 +1,16 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { v4 as uuidv4 } from 'uuid';
 import { Todo } from '../../types';
 import { RootState } from '../config/configStore';
 
-const initialState: Todo[] = [
-  {
-    id: uuidv4(),
-    title: '할일1',
-    content: '내용1',
-    isDone: false,
-  },
-  {
-    id: uuidv4(),
-    title: '할일2',
-    content: '내용2',
-    isDone: false,
-  },
-  {
-    id: uuidv4(),
-    title: '할일3',
-    content: '내용3',
-    isDone: true,
-  },
-];
+const initialState: Todo[] = [];
 
 const todoSlice = createSlice({
   name: 'todos', // 모듈의 이름
   initialState, // 모듈의 초기 상태
   reducers: {
+    setTodo: (state, action: PayloadAction<Todo[]>) => {
+      return action.payload;
+    },
     addTodo: (state, action: PayloadAction<Todo>) => {
       state.push(action.payload);
     },
@@ -47,6 +30,6 @@ const todoSlice = createSlice({
 export const selectTodos = (state: RootState) => state.todos;
 
 // 액션크리에이터는 컴포넌트에서 사용하기 위해 export 하고
-export const { addTodo, editTodo, deleteTodo } = todoSlice.actions;
+export const { addTodo, editTodo, deleteTodo, setTodo } = todoSlice.actions;
 // reducer 는 configStore에 등록하기 위해 export default 합니다.
 export default todoSlice.reducer;

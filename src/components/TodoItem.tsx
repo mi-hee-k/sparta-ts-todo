@@ -1,31 +1,52 @@
-import React from 'react';
 import styled from 'styled-components';
 import { useAppDispatch } from '../hooks';
 import { editTodo, deleteTodo } from '../redux/modules/TodoSlice';
+import api from '../axios/api';
+import { Todo } from '../types';
 
 interface TodoItemProps {
-  item: { id: string; title: string; content: string };
+  item: Todo;
 }
 
 const TodoItem = ({ item }: TodoItemProps) => {
   const dispatch = useAppDispatch();
 
-  const changeHandler = (id: string) => {
+  const editTodoToServer = async ({
+    id,
+    isDone,
+  }: {
+    id: string;
+    isDone: boolean;
+  }) => {
+    await api.patch(`${id}`, { isDone: !isDone });
+  };
+
+  const deleteTodoToServer = async (id: string) => {
+    await api.delete(`${id}`);
+  };
+
+  const changeHandler = ({ id, isDone }: { id: string; isDone: boolean }) => {
+    editTodoToServer({ id, isDone });
     dispatch(editTodo(id));
   };
 
   const deleteHandler = (id: string) => {
     if (window.confirm('정말 삭제하시겠습니까?')) {
+      deleteTodoToServer(id);
       dispatch(deleteTodo(id));
     }
     return;
   };
 
   return (
-    <ScList key={item.id}>
+    <ScList>
       <h3>{item.title}</h3>
       <p>{item.content}</p>
-      <ScCompleteBtn onClick={() => changeHandler(item.id)}>완료</ScCompleteBtn>
+      <ScCompleteBtn
+        onClick={() => changeHandler({ id: item.id, isDone: item.isDone })}
+      >
+        {item.isDone ? '취소' : '완료'}
+      </ScCompleteBtn>
       <ScDeleteBtn onClick={() => deleteHandler(item.id)}>삭제</ScDeleteBtn>
     </ScList>
   );
