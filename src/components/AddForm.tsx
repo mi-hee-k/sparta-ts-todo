@@ -1,14 +1,10 @@
 import { FormEvent, ChangeEvent, useState } from 'react';
 import styled from 'styled-components';
 import { v4 as uuidv4 } from 'uuid';
-import { useAppDispatch } from '../hooks';
-import { addTodo } from '../redux/modules/TodoSlice';
-import api from '../axios/api';
-import { Todo } from '../types';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { addTodo } from '../axios/api';
 
 const AddForm = () => {
-  const dispatch = useAppDispatch();
-
   const [inputs, setInputs] = useState({
     title: '',
     content: '',
@@ -21,9 +17,15 @@ const AddForm = () => {
     });
   };
 
-  const addTodoToServer = async (newTodo: Todo) => {
-    await api.post('', newTodo);
-  };
+  const qeuryClient = useQueryClient();
+
+  // Mutations
+  const addTodoMutation = useMutation({
+    mutationFn: addTodo,
+    onSuccess: () => {
+      qeuryClient.invalidateQueries({ queryKey: ['todos'] });
+    },
+  });
 
   const submitForm = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -41,9 +43,7 @@ const AddForm = () => {
       content: inputs.content,
       isDone: false,
     };
-
-    addTodoToServer(newTodo);
-    dispatch(addTodo(newTodo));
+    addTodoMutation.mutate(newTodo);
     setInputs({
       title: '',
       content: '',

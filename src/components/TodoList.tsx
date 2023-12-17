@@ -1,19 +1,35 @@
 import TodoItem from './TodoItem';
 import styled from 'styled-components';
-import { useAppSelector } from '../hooks';
-import { Todo } from '../types';
+import { useQuery } from '@tanstack/react-query';
+import { getTodos } from '../axios/api';
 
 interface TodoListProps {
   isDone: boolean;
 }
 
 const TodoList = ({ isDone }: TodoListProps) => {
-  const todos = useAppSelector((state) => state.todos);
+  // Queries
+  const {
+    isLoading,
+    isError,
+    error,
+    data: todos,
+  } = useQuery<Todo[]>({
+    queryKey: ['todos'],
+    queryFn: getTodos,
+  });
+
+  if (isLoading) {
+    return <h2>Loading...</h2>;
+  }
+
+  if (isError) return <h2>{error.message}</h2>;
+
   return (
     <ScWrapper>
       <h2>{isDone ? '✨ 완료 ✨' : '💪 진행중 💪'}</h2>
       <ScListWrapper>
-        {todos
+        {todos!
           .filter((item: Todo) => item.isDone === isDone)
           .map((item: Todo) => (
             <TodoItem key={item.id} item={item} />

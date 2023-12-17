@@ -1,53 +1,43 @@
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import styled from 'styled-components';
-import { useAppDispatch } from '../hooks';
-import { editTodo, deleteTodo } from '../redux/modules/TodoSlice';
-import api from '../axios/api';
-import { Todo } from '../types';
+import { deleteTodo, editTodo } from '../axios/api';
 
 interface TodoItemProps {
   item: Todo;
 }
 
 const TodoItem = ({ item }: TodoItemProps) => {
-  const dispatch = useAppDispatch();
+  const qeuryClient = useQueryClient();
 
-  const editTodoToServer = async ({
-    id,
-    isDone,
-  }: {
-    id: string;
-    isDone: boolean;
-  }) => {
-    await api.patch(`${id}`, { isDone: !isDone });
-  };
+  // Mutations
+  const editTodoMutation = useMutation({
+    mutationFn: editTodo,
+    onSuccess: () => {
+      qeuryClient.invalidateQueries({ queryKey: ['todos'] });
+    },
+  });
 
-  const deleteTodoToServer = async (id: string) => {
-    await api.delete(`${id}`);
-  };
-
-  const changeHandler = ({ id, isDone }: { id: string; isDone: boolean }) => {
-    editTodoToServer({ id, isDone });
-    dispatch(editTodo(id));
-  };
-
-  const deleteHandler = (id: string) => {
-    if (window.confirm('정말 삭제하시겠습니까?')) {
-      deleteTodoToServer(id);
-      dispatch(deleteTodo(id));
-    }
-    return;
-  };
+  const deleteTodoMutation = useMutation({
+    mutationFn: deleteTodo,
+    onSuccess: () => {
+      qeuryClient.invalidateQueries({ queryKey: ['todos'] });
+    },
+  });
 
   return (
     <ScList>
       <h3>{item.title}</h3>
       <p>{item.content}</p>
       <ScCompleteBtn
-        onClick={() => changeHandler({ id: item.id, isDone: item.isDone })}
+        onClick={() =>
+          editTodoMutation.mutate({ id: item.id, isDone: item.isDone })
+        }
       >
         {item.isDone ? '취소' : '완료'}
       </ScCompleteBtn>
-      <ScDeleteBtn onClick={() => deleteHandler(item.id)}>삭제</ScDeleteBtn>
+      <ScDeleteBtn onClick={() => deleteTodoMutation.mutate(item.id)}>
+        삭제
+      </ScDeleteBtn>
     </ScList>
   );
 };

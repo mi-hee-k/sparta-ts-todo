@@ -1,23 +1,8 @@
 import AddForm from './components/AddForm';
 import TodoList from './components/TodoList';
 import styled from 'styled-components';
-import axios from 'axios';
-import { useEffect } from 'react';
-import { setTodo } from './redux/modules/TodoSlice';
-import { useAppDispatch } from './hooks';
 
 function App() {
-  const dispatch = useAppDispatch();
-
-  const fetchTodos = async () => {
-    const { data } = await axios.get('http://localhost:3001/todos');
-    dispatch(setTodo(data));
-  };
-
-  useEffect(() => {
-    fetchTodos();
-  }, []);
-
   return (
     <>
       <header>
